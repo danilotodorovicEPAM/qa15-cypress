@@ -1,0 +1,14 @@
+{
+  "name": "cypressvezba",
+  "version": "1.0.0",
+  "main": "index.js",
+  "scripts": {
+    "cypress": "npx cypress open"
+  },
+  "author": "",
+  "license": "ISC",
+  "description": "",
+  "devDependencies": {
+    "cypress": "^10.10.0"
+  }
+}
