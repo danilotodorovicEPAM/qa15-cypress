@@ -36,7 +36,7 @@ describe('Login test cases', () => {
     })
    
 
-    it.only('Login with invalid password', () => {
+    it('Login with invalid password', () => {
         cy.get(locators.login.emailInput).clear().type('danilo.todorovic@vivifyideas.com')
         cy.get(locators.login.passwordInput).clear().type(faker.internet.password())
         cy.get(locators.login.submitButton).click()

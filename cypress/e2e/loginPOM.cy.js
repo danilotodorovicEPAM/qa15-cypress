@@ -17,6 +17,8 @@ describe('Login test cases', () => {
     })
 
     it.only('Login with valid credentials and logout', () => {
+        cy.intercept('POST', 'https://gallery-api.vivifyideas.com/api/auth/login').as('validLogin')
+        cy.intercept('POST', 'https://gallery-api.vivifyideas.com/api/auth/logout').as('logout')
         loginPage.login('danilo.todorovic@vivifyideas.com', 'Password1')
         navigation.loginButton.should('not.exist')
         navigation.logoutButton.should('exist')
@@ -24,9 +26,20 @@ describe('Login test cases', () => {
         navigation.clickOnLogoutButton()
         navigation.logoutButton.should('not.exist')
         navigation.loginButton.should('exist')
+        cy.wait('@validLogin').then(intercept => {
+            // console.log(intercept);
+            expect(intercept.response.statusCode).to.eq(200)
+            expect(intercept.request.body.email).to.eq(Cypress.env('validEmail'))
+            expect(intercept.request.body.password).to.eq(Cypress.env('validPassword'))
+        })
+        cy.wait('@logout').its('response').then(response => {
+            console.log(response);
+            expect(response.statusCode).to.eq(200)
+            expect(response.body.message).to.eq("Successfully logged out")
+        })
     })
 
-    it.only('Login with invalid email', () => {
+    it('Login with invalid email', () => {
         loginPage.login(faker.internet.email(), 'Password1')
         general.errorMessage.should('be.visible')
             .and('have.text', 'Bad Credentials')
